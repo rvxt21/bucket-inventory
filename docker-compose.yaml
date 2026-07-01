@@ -1,0 +1,14 @@
+services:
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:latest
+    restart: always
+    ports:
+      - "4566:4566"
+    env_file:
+      - ./.env
+    environment:
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN:-dummy-access-token}
+    volumes:
+      - '${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack'
+      - '/var/run/docker.sock:/var/run/docker.sock'
