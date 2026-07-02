@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"time"
 
 	"github.com/caarlos0/env/v11"
 	"github.com/joho/godotenv"
@@ -14,8 +15,9 @@ type Config struct {
 }
 
 type HTTP struct {
-	Host string `env:"HTTP_HOST,required" envDefault:"localhost"`
-	Port string `env:"HTTP_PORT,required" envDefault:"1111"`
+	Host        string        `env:"HTTP_HOST,required" envDefault:"localhost"`
+	Port        string        `env:"HTTP_PORT,required" envDefault:"1111"`
+	ReadTimeout time.Duration `env:"HTTP_READ_TIMEOUT"  envDefault:"10s"`
 }
 
 func LoadConfig() (*Config, error) {
@@ -25,8 +27,8 @@ func LoadConfig() (*Config, error) {
 	}
 
 	var cfg Config
+
 	cfg, err = env.ParseAs[Config]()
 
 	return &cfg, err
-
 }
