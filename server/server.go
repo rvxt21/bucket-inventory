@@ -21,10 +21,11 @@ func (s *Server) Start(_ context.Context) error {
 	router := echo.New()
 
 	addr := net.JoinHostPort(s.config.Host, s.config.Port)
-	s.server = &http.Server{Addr: addr, Handler: router}
+	s.server = &http.Server{Addr: addr, Handler: router, ReadTimeout: s.config.ReadTimeout}
 
 	go func() {
-		if err := s.server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		err := s.server.ListenAndServe()
+		if err != nil && !errors.Is(err, http.ErrServerClosed) {
 			s.logger.Error("failed to start server", slog.Any("error", err.Error()))
 		}
 	}()
