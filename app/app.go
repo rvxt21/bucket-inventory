@@ -2,9 +2,10 @@ package app
 
 import (
 	"github.com/rvxt21/bucket-inventory/config"
+	"github.com/rvxt21/bucket-inventory/internal/postgres"
 	"github.com/rvxt21/bucket-inventory/internal/service"
 	"github.com/rvxt21/bucket-inventory/internal/storage"
-	"github.com/rvxt21/bucket-inventory/logger"
+	"github.com/rvxt21/bucket-inventory/pkg/logger"
 	"github.com/rvxt21/bucket-inventory/server"
 	"github.com/rvxt21/bucket-inventory/server/handlers"
 	"go.uber.org/fx"
@@ -20,6 +21,7 @@ func App(cfg *config.Config) *fx.App {
 			logger.NewLogger,
 			server.NewServer,
 			storage.NewS3,
+			postgres.NewPostgres,
 			fx.Annotate(service.NewS3Service, fx.As(new(service.Service))),
 			handlers.NewHandler,
 		),
@@ -31,11 +33,13 @@ func App(cfg *config.Config) *fx.App {
 type hooks struct {
 	fx.In
 
-	Server *server.Server
-	S3     *storage.S3
+	Server   *server.Server
+	S3       *storage.S3
+	Postgres *postgres.Postgres
 }
 
 func invokeHooks(lc fx.Lifecycle, h hooks) {
 	lc.Append(fx.Hook{OnStart: h.Server.Start, OnStop: h.Server.Stop})
 	lc.Append(fx.Hook{OnStart: h.S3.Start, OnStop: h.S3.Stop})
+	lc.Append(fx.Hook{OnStart: h.Postgres.Start, OnStop: h.Postgres.Stop})
 }

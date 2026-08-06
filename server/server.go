@@ -22,10 +22,11 @@ type Server struct {
 func (s *Server) Start(_ context.Context) error {
 	router := echo.New()
 
-	addr := net.JoinHostPort(s.config.Host, s.config.Port)
+	addr := net.JoinHostPort(s.config.HTTP.Host, s.config.HTTP.Port)
 	s.server = &http.Server{Addr: addr, Handler: router, ReadTimeout: s.config.ReadTimeout}
 
 	router.POST("/upload", s.handlers.UploadFile)
+	router.GET("/files/:name", s.handlers.GetFile)
 
 	go func() {
 		err := s.server.ListenAndServe()
