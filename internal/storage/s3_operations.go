@@ -3,7 +3,6 @@ package storage
 import (
 	"context"
 	"io"
-	"net/url"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -42,26 +41,5 @@ func (s *S3) PresignGetObject(ctx context.Context, key string, ttl time.Duration
 		return "", err
 	}
 
-	if s.cfg.PublicEndpoint == "" {
-		return req.URL, nil
-	}
-
-	return rewriteHost(req.URL, s.cfg.PublicEndpoint)
-}
-
-func rewriteHost(rawURL, endpoint string) (string, error) {
-	signed, err := url.Parse(rawURL)
-	if err != nil {
-		return "", err
-	}
-
-	public, err := url.Parse(endpoint)
-	if err != nil {
-		return "", err
-	}
-
-	signed.Scheme = public.Scheme
-	signed.Host = public.Host
-
-	return signed.String(), nil
+	return req.URL, nil
 }
