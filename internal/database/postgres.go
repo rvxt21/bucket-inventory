@@ -1,4 +1,4 @@
-package postgres
+package database
 
 import (
 	"context"
@@ -7,9 +7,8 @@ import (
 	"net"
 	"net/url"
 
-	"github.com/rvxt21/bucket-inventory/config"
-
 	_ "github.com/lib/pq" // postgres driver
+	"github.com/rvxt21/bucket-inventory/config"
 )
 
 type Postgres struct {

@@ -34,6 +34,11 @@ linters:
     - testpackage
     - wsl
     - wrapcheck
+    - varnamelen
+    - tagliatelle
+    - noinlineerr
+    - gochecknoglobals
+    - unqueryvet
   settings:
     gocritic:
       enabled-tags:

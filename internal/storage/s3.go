@@ -11,9 +11,10 @@ import (
 )
 
 type S3 struct {
-	cfg    *config.Config
-	client *s3.Client
-	bucket string
+	cfg     *config.Config
+	client  *s3.Client
+	presign *s3.PresignClient
+	bucket  string
 }
 
 func (s *S3) Start(ctx context.Context) error {
@@ -31,6 +32,8 @@ func (s *S3) Start(ctx context.Context) error {
 			o.UsePathStyle = true
 		}
 	})
+
+	s.presign = s3.NewPresignClient(s.client)
 
 	return nil
 }

@@ -2,8 +2,8 @@ package app
 
 import (
 	"github.com/rvxt21/bucket-inventory/config"
-	"github.com/rvxt21/bucket-inventory/internal/postgres"
-	"github.com/rvxt21/bucket-inventory/internal/service"
+	"github.com/rvxt21/bucket-inventory/internal/database"
+	"github.com/rvxt21/bucket-inventory/internal/service/file"
 	"github.com/rvxt21/bucket-inventory/internal/storage"
 	"github.com/rvxt21/bucket-inventory/pkg/logger"
 	"github.com/rvxt21/bucket-inventory/server"
@@ -20,9 +20,9 @@ func App(cfg *config.Config) *fx.App {
 		fx.Provide(
 			logger.NewLogger,
 			server.NewServer,
-			storage.NewS3,
-			postgres.NewPostgres,
-			fx.Annotate(service.NewS3Service, fx.As(new(service.Service))),
+			fx.Annotate(storage.NewS3, fx.As(new(file.S3)), fx.As(fx.Self())),
+			fx.Annotate(database.NewPostgres, fx.As(new(file.Database)), fx.As(fx.Self())),
+			fx.Annotate(file.NewFileService, fx.As(new(file.Service))),
 			handlers.NewHandler,
 		),
 
@@ -35,7 +35,7 @@ type hooks struct {
 
 	Server   *server.Server
 	S3       *storage.S3
-	Postgres *postgres.Postgres
+	Postgres *database.Postgres
 }
 
 func invokeHooks(lc fx.Lifecycle, h hooks) {

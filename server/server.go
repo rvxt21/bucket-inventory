@@ -26,7 +26,7 @@ func (s *Server) Start(_ context.Context) error {
 	s.server = &http.Server{Addr: addr, Handler: router, ReadTimeout: s.config.ReadTimeout}
 
 	router.POST("/upload", s.handlers.UploadFile)
-	router.GET("/files/:name", s.handlers.GetFile)
+	router.GET("/files", s.handlers.GetFiles)
 
 	go func() {
 		err := s.server.ListenAndServe()
@@ -42,10 +42,10 @@ func (s *Server) Stop(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }
 
-func NewServer(cfg *config.Config, log *slog.Logger, handlers *handlers.Handler) *Server {
+func NewServer(cfg *config.Config, log *slog.Logger, h *handlers.Handler) *Server {
 	return &Server{
 		config:   cfg,
 		logger:   log,
-		handlers: handlers,
+		handlers: h,
 	}
 }

@@ -28,6 +28,9 @@ type S3 struct {
 	AccessKey  string `env:"S3_ACCESS_KEY"`
 	SecretKey  string `env:"S3_SECRET_KEY"`
 	BucketName string `env:"S3_BUCKET_NAME"`
+
+	PublicEndpoint string        `env:"S3_PUBLIC_ENDPOINT"`
+	LinkTTL        time.Duration `env:"S3_LINK_TTL"        envDefault:"15m"`
 }
 
 type Postgres struct {
