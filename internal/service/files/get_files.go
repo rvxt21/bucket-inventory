@@ -1,4 +1,4 @@
-package file
+package files
 
 import (
 	"context"
@@ -20,7 +20,7 @@ func (s *FileService) GetFiles(ctx context.Context) ([]dto.FileResponse, error) 
 			return nil, ErrGetFiles.Wrap(err)
 		}
 
-		res = append(res, makeFileResponse(file, link))
+		res = append(res, makeFileResponse(&file, link))
 	}
 
 	return res, nil

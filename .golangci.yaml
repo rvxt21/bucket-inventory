@@ -39,6 +39,7 @@ linters:
     - noinlineerr
     - gochecknoglobals
     - unqueryvet
+    - exhaustruct_v5
   settings:
     gocritic:
       enabled-tags:
@@ -84,5 +85,6 @@ formatters:
     warn-unused: true
     generated: lax
     paths:
+      - migrations
       - third_party$
       - builtin$

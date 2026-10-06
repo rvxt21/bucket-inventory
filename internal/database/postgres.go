@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"net"
 	"net/url"
@@ -36,8 +37,7 @@ func (p *Postgres) Start(ctx context.Context) error {
 	db.SetConnMaxIdleTime(p.config.ConnMaxIdleTime)
 
 	if err = db.PingContext(ctx); err != nil {
-		db.Close()
-		return fmt.Errorf("%w: %w", ErrPingingDatabase, err)
+		return fmt.Errorf("%w: %w", ErrPingingDatabase, errors.Join(err, db.Close()))
 	}
 
 	p.db = db

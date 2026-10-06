@@ -21,7 +21,8 @@ func (s *S3) Start(ctx context.Context) error {
 	cfg, err := cfgAws.LoadDefaultConfig(
 		ctx,
 		cfgAws.WithRegion(s.cfg.Region),
-		cfgAws.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(s.cfg.AccessKey, s.cfg.SecretKey, "")))
+		cfgAws.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(s.cfg.AccessKey, s.cfg.SecretKey, "")),
+	)
 	if err != nil {
 		return err
 	}

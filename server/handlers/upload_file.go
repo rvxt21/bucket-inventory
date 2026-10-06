@@ -27,7 +27,11 @@ func (h *Handler) UploadFile(c *echo.Context) error {
 		return err
 	}
 
-	defer src.Close()
+	defer func() {
+		if err := src.Close(); err != nil {
+			h.log.Error("failed to close form file", slog.Any("error", err))
+		}
+	}()
 
 	filename := file.Filename
 
