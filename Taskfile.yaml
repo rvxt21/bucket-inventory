@@ -27,3 +27,13 @@ tasks:
     desc: Run linters against the codebase.
     cmds:
       - golangci-lint run --fix ./...
+
+  mock:
+    desc: Run command for generate mocks with mockery
+    cmds:
+      - rm -rf ./test/mocks
+      - mockery --config=.mockery.yml
+  
+  test:
+    desc: Run tests
+    cmd: go test -v ./... -race -cover -json | tparse -all
