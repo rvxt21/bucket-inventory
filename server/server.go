@@ -9,14 +9,14 @@ import (
 
 	"github.com/labstack/echo/v5"
 	"github.com/rvxt21/bucket-inventory/config"
-	"github.com/rvxt21/bucket-inventory/server/handlers"
+	filehandlers "github.com/rvxt21/bucket-inventory/server/handlers/files"
 )
 
 type Server struct {
 	server   *http.Server
 	config   *config.Config
 	logger   *slog.Logger
-	handlers *handlers.Handler
+	handlers *filehandlers.Handler
 }
 
 func (s *Server) Start(_ context.Context) error {
@@ -44,7 +44,7 @@ func (s *Server) Stop(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }
 
-func NewServer(cfg *config.Config, log *slog.Logger, h *handlers.Handler) *Server {
+func NewServer(cfg *config.Config, log *slog.Logger, h *filehandlers.Handler) *Server {
 	return &Server{
 		config:   cfg,
 		logger:   log,

@@ -1,19 +1,19 @@
-package handlers
+package files
 
 import (
 	"log/slog"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/rvxt21/bucket-inventory/internal/service/files"
+	filesservice "github.com/rvxt21/bucket-inventory/internal/service/files"
 )
 
 type Handler struct {
 	log       *slog.Logger
-	service   files.Service
+	service   filesservice.Service
 	validator *validator.Validate
 }
 
-func NewHandler(log *slog.Logger, service files.Service) *Handler {
+func NewHandler(log *slog.Logger, service filesservice.Service) *Handler {
 	return &Handler{
 		log:       log,
 		service:   service,

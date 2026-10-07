@@ -1,4 +1,4 @@
-package handlers
+package files
 
 import (
 	"errors"
@@ -6,8 +6,9 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v5"
-	"github.com/rvxt21/bucket-inventory/internal/service/files"
+	filesservice "github.com/rvxt21/bucket-inventory/internal/service/files"
 	"github.com/rvxt21/bucket-inventory/pkg/dto"
+	"github.com/rvxt21/bucket-inventory/server/handlers"
 )
 
 func (h *Handler) DeleteFile(c *echo.Context) error {
@@ -16,16 +17,16 @@ func (h *Handler) DeleteFile(c *echo.Context) error {
 	var req dto.DeleteFileRequest
 
 	if err := c.Bind(&req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, ErrBind.Wrap(err).Error())
+		return echo.NewHTTPError(http.StatusBadRequest, handlers.ErrBind.Wrap(err).Error())
 	}
 
 	if err := h.validator.StructCtx(ctx, &req); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, ErrValidate.Wrap(err).Error())
+		return echo.NewHTTPError(http.StatusBadRequest, handlers.ErrValidate.Wrap(err).Error())
 	}
 
 	err := h.service.DeleteFile(ctx, &req)
 	if err != nil {
-		if errors.Is(err, files.ErrFileNotFound) {
+		if errors.Is(err, filesservice.ErrFileNotFound) {
 			return echo.NewHTTPError(http.StatusNotFound, "file not found")
 		}
 
