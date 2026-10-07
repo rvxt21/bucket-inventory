@@ -1,0 +1,39 @@
+version: '3'
+dotenv:
+  - '.env'
+
+tasks:
+  migrate-up:
+    desc: Run db migration.
+    aliases: [ mgup ]
+    env:
+      GOOSE_DRIVER: postgres
+      GOOSE_DBSTRING: "postgres://{{.POSTGRES_USER}}:{{.POSTGRES_PASSWORD}}@{{.POSTGRES_HOST}}:{{.POSTGRES_PORT}}/{{.POSTGRES_DB}}?sslmode=disable"
+    cmds:
+    - goose -dir ./migrations up
+    - jet -dsn="$GOOSE_DBSTRING" -schema=files -path=./internal/database/gen
+  
+  migrate-down:
+    desc: Roll back the last db migration.
+    aliases: [ mgdwn ]
+    env:
+      GOOSE_DRIVER: postgres
+      GOOSE_DBSTRING: "postgres://{{.POSTGRES_USER}}:{{.POSTGRES_PASSWORD}}@{{.POSTGRES_HOST}}:{{.POSTGRES_PORT}}/{{.POSTGRES_DB}}?sslmode=disable"
+    cmds:
+      - goose -dir ./migrations down
+      - jet -dsn="$GOOSE_DBSTRING" -schema=files -path=./internal/database/gen
+
+  lint:
+    desc: Run linters against the codebase.
+    cmds:
+      - golangci-lint run --fix ./...
+
+  mock:
+    desc: Run command for generate mocks with mockery
+    cmds:
+      - rm -rf ./test/mocks
+      - mockery --config=.mockery.yml
+  
+  test:
+    desc: Run tests
+    cmd: go test -v ./... -race -cover -json | tparse -all

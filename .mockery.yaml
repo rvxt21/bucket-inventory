@@ -1,0 +1,15 @@
+all: false
+dir: 'test/mocks'
+filename: '{{.SrcPackageName}}_{{.InterfaceName | snakecase }}.go'
+structname: '{{.SrcPackageName | firstUpper }}{{.InterfaceName}}'
+pkgname: mocks
+template: testify
+force-file-write: true
+packages:
+  github.com/rvxt21/bucket-inventory/internal/service/files:
+    interfaces:
+      Database: {}
+      S3: {}
+
+      
+  

@@ -9,19 +9,25 @@ import (
 
 	"github.com/labstack/echo/v5"
 	"github.com/rvxt21/bucket-inventory/config"
+	"github.com/rvxt21/bucket-inventory/server/handlers"
 )
 
 type Server struct {
-	server *http.Server
-	config *config.Config
-	logger *slog.Logger
+	server   *http.Server
+	config   *config.Config
+	logger   *slog.Logger
+	handlers *handlers.Handler
 }
 
 func (s *Server) Start(_ context.Context) error {
 	router := echo.New()
 
-	addr := net.JoinHostPort(s.config.Host, s.config.Port)
+	addr := net.JoinHostPort(s.config.HTTP.Host, s.config.HTTP.Port)
 	s.server = &http.Server{Addr: addr, Handler: router, ReadTimeout: s.config.ReadTimeout}
+
+	router.POST("/upload", s.handlers.UploadFile)
+	router.GET("/files", s.handlers.GetFiles)
+	router.GET("/files/:id", s.handlers.GetFileByID)
 
 	go func() {
 		err := s.server.ListenAndServe()
@@ -37,9 +43,10 @@ func (s *Server) Stop(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }
 
-func NewServer(cfg *config.Config, log *slog.Logger) *Server {
+func NewServer(cfg *config.Config, log *slog.Logger, h *handlers.Handler) *Server {
 	return &Server{
-		config: cfg,
-		logger: log,
+		config:   cfg,
+		logger:   log,
+		handlers: h,
 	}
 }
