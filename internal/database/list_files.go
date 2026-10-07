@@ -8,10 +8,7 @@ import (
 	"github.com/rvxt21/bucket-inventory/internal/database/gen/files/files/model"
 	"github.com/rvxt21/bucket-inventory/internal/database/gen/files/files/table"
 	"github.com/rvxt21/bucket-inventory/pkg/dto"
-	pkgerrors "github.com/rvxt21/bucket-inventory/pkg/errors"
 )
-
-var ErrListFiles = &pkgerrors.Error{Message: "error listing files"}
 
 func (p *Postgres) List(ctx context.Context) ([]dto.File, error) {
 	stmt := table.File.

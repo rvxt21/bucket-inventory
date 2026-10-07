@@ -9,10 +9,7 @@ import (
 	"github.com/rvxt21/bucket-inventory/internal/database/gen/files/files/model"
 	"github.com/rvxt21/bucket-inventory/internal/database/gen/files/files/table"
 	"github.com/rvxt21/bucket-inventory/pkg/dto"
-	pkgerrors "github.com/rvxt21/bucket-inventory/pkg/errors"
 )
-
-var ErrGetFileByID = &pkgerrors.Error{Message: "error get file by id"}
 
 func (p *Postgres) GetFileByID(ctx context.Context, id string) (*dto.File, error) {
 	stmt := table.File.

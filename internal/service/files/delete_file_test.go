@@ -1,0 +1,74 @@
+package files
+
+import (
+	"testing"
+
+	"github.com/rvxt21/bucket-inventory/internal/database"
+	"github.com/rvxt21/bucket-inventory/pkg/dto"
+	"github.com/stretchr/testify/require"
+)
+
+func TestDeleteFile_Success(t *testing.T) {
+	ctx := t.Context()
+
+	svc, m := service(t)
+	req := &dto.DeleteFileRequest{ID: "123"}
+
+	m.db.EXPECT().GetFileByID(ctx, "123").Return(&dto.File{ID: "123", StorageKey: "key"}, nil).Once()
+	m.db.EXPECT().DeleteFile(ctx, "123").Return(true, nil).Once()
+	m.s3.EXPECT().DeleteObject(ctx, "key").Return(nil).Once()
+
+	err := svc.DeleteFile(ctx, req)
+	require.NoError(t, err)
+}
+
+func TestDeleteFile_NotFound(t *testing.T) {
+	ctx := t.Context()
+
+	svc, m := service(t)
+	req := &dto.DeleteFileRequest{ID: "123"}
+
+	m.db.EXPECT().GetFileByID(ctx, "123").Return(nil, database.ErrNotFound).Once()
+
+	err := svc.DeleteFile(ctx, req)
+	require.ErrorIs(t, err, ErrFileNotFound)
+}
+
+func TestDeleteFile_GetError(t *testing.T) {
+	ctx := t.Context()
+
+	svc, m := service(t)
+	req := &dto.DeleteFileRequest{ID: "123"}
+
+	m.db.EXPECT().GetFileByID(ctx, "123").Return(nil, errDB).Once()
+
+	err := svc.DeleteFile(ctx, req)
+	require.ErrorIs(t, err, errDB)
+}
+
+func TestDeleteFile_DeleteDBError(t *testing.T) {
+	ctx := t.Context()
+
+	svc, m := service(t)
+	req := &dto.DeleteFileRequest{ID: "123"}
+
+	m.db.EXPECT().GetFileByID(ctx, "123").Return(&dto.File{ID: "123", StorageKey: "key"}, nil).Once()
+	m.db.EXPECT().DeleteFile(ctx, "123").Return(false, errDB).Once()
+
+	err := svc.DeleteFile(ctx, req)
+	require.ErrorIs(t, err, errDB)
+}
+
+func TestDeleteFile_S3Error(t *testing.T) {
+	ctx := t.Context()
+
+	svc, m := service(t)
+	req := &dto.DeleteFileRequest{ID: "123"}
+
+	m.db.EXPECT().GetFileByID(ctx, "123").Return(&dto.File{ID: "123", StorageKey: "key"}, nil).Once()
+	m.db.EXPECT().DeleteFile(ctx, "123").Return(true, nil).Once()
+	m.s3.EXPECT().DeleteObject(ctx, "key").Return(errS3).Once()
+
+	err := svc.DeleteFile(ctx, req)
+	require.NoError(t, err)
+}

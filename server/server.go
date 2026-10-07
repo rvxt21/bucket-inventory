@@ -28,6 +28,7 @@ func (s *Server) Start(_ context.Context) error {
 	router.POST("/upload", s.handlers.UploadFile)
 	router.GET("/files", s.handlers.GetFiles)
 	router.GET("/files/:id", s.handlers.GetFileByID)
+	router.DELETE("/files/:id", s.handlers.DeleteFile)
 
 	go func() {
 		err := s.server.ListenAndServe()

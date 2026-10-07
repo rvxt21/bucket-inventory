@@ -16,8 +16,11 @@ func (s *S3) UploadObject(ctx context.Context, key string, body io.Reader, conte
 		Body:        body,
 		ContentType: aws.String(contentType),
 	})
+	if err != nil {
+		return ErrUploadObject.Wrap(err)
+	}
 
-	return err
+	return nil
 }
 
 func (s *S3) GetObject(ctx context.Context, key string) (io.ReadCloser, *string, error) {
@@ -26,7 +29,7 @@ func (s *S3) GetObject(ctx context.Context, key string) (io.ReadCloser, *string,
 		Key:    &key,
 	})
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, ErrGetObject.Wrap(err)
 	}
 
 	return obj.Body, obj.ContentType, nil
@@ -38,8 +41,22 @@ func (s *S3) PresignGetObject(ctx context.Context, key string, ttl time.Duration
 		Key:    aws.String(key),
 	}, s3.WithPresignExpires(ttl))
 	if err != nil {
-		return "", err
+		return "", ErrPresignObject.Wrap(err)
 	}
 
 	return req.URL, nil
+}
+
+func (s *S3) DeleteObject(ctx context.Context, key string) error {
+	input := &s3.DeleteObjectInput{
+		Bucket: aws.String(s.bucket),
+		Key:    aws.String(key),
+	}
+
+	_, err := s.client.DeleteObject(ctx, input)
+	if err != nil {
+		return ErrDeleteObject.Wrap(err)
+	}
+
+	return nil
 }

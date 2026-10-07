@@ -2,6 +2,7 @@ package files
 
 import (
 	"errors"
+	"log/slog"
 	"testing"
 	"time"
 
@@ -82,5 +83,5 @@ func service(t *testing.T) (*FileService, *MockServices) {
 	db := mocks.NewFilesDatabase(t)
 	s3 := mocks.NewFilesS3(t)
 
-	return NewFileService(cfg, s3, db), &MockServices{db: db, s3: s3}
+	return NewFileService(cfg, slog.New(slog.DiscardHandler), s3, db), &MockServices{db: db, s3: s3}
 }

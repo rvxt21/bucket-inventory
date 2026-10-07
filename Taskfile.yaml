@@ -32,7 +32,7 @@ tasks:
     desc: Run command for generate mocks with mockery
     cmds:
       - rm -rf ./test/mocks
-      - mockery --config=.mockery.yml
+      - mockery --config=.mockery.yaml
   
   test:
     desc: Run tests
