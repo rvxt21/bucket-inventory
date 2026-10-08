@@ -6,10 +6,7 @@ import (
 	"github.com/rvxt21/bucket-inventory/internal/database/gen/files/files/model"
 	"github.com/rvxt21/bucket-inventory/internal/database/gen/files/files/table"
 	"github.com/rvxt21/bucket-inventory/pkg/dto"
-	"github.com/rvxt21/bucket-inventory/pkg/errors"
 )
-
-var ErrCreateFile = &errors.Error{Message: "error creating file"}
 
 func (p *Postgres) Create(ctx context.Context, req *dto.CreateFile) (*dto.File, error) {
 	q := table.File.INSERT(

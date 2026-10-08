@@ -7,4 +7,5 @@ var (
 	ErrGetFile      = &errors.Error{Message: "error get file"}
 	ErrGetFiles     = &errors.Error{Message: "error get files"}
 	ErrFileNotFound = &errors.Error{Message: "requested file not found"}
+	ErrDeleteFile   = &errors.Error{Message: "error deleting file"}
 )

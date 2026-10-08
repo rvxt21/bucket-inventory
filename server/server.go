@@ -8,26 +8,33 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
 	"github.com/rvxt21/bucket-inventory/config"
-	"github.com/rvxt21/bucket-inventory/server/handlers"
+	_ "github.com/rvxt21/bucket-inventory/open_api" // registers the generated spec
+	filehandlers "github.com/rvxt21/bucket-inventory/server/handlers/files"
 )
+
+const bytesInMB = 1 << 20
 
 type Server struct {
 	server   *http.Server
 	config   *config.Config
 	logger   *slog.Logger
-	handlers *handlers.Handler
+	handlers *filehandlers.Handler
 }
 
 func (s *Server) Start(_ context.Context) error {
 	router := echo.New()
 
+	router.Use(middleware.Recover())
+
 	addr := net.JoinHostPort(s.config.HTTP.Host, s.config.HTTP.Port)
 	s.server = &http.Server{Addr: addr, Handler: router, ReadTimeout: s.config.ReadTimeout}
 
-	router.POST("/upload", s.handlers.UploadFile)
+	router.POST("/files", s.handlers.UploadFile, middleware.BodyLimit(s.config.MaxUploadMB*bytesInMB))
 	router.GET("/files", s.handlers.GetFiles)
 	router.GET("/files/:id", s.handlers.GetFileByID)
+	router.DELETE("/files/:id", s.handlers.DeleteFile)
 
 	go func() {
 		err := s.server.ListenAndServe()
@@ -43,7 +50,7 @@ func (s *Server) Stop(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }
 
-func NewServer(cfg *config.Config, log *slog.Logger, h *handlers.Handler) *Server {
+func NewServer(cfg *config.Config, log *slog.Logger, h *filehandlers.Handler) *Server {
 	return &Server{
 		config:   cfg,
 		logger:   log,

@@ -49,5 +49,5 @@ type FileResponse struct {
 	Size        int64     `json:"size"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
-	Link        string    `json:"link"`
+	Link        string    `json:"link,omitempty"`
 }

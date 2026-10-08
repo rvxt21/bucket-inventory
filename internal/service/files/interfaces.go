@@ -9,19 +9,22 @@ import (
 )
 
 type Service interface {
-	UploadFile(ctx context.Context, req dto.UploadFile) (*dto.File, error)
+	UploadFile(ctx context.Context, req dto.UploadFile) (*dto.FileResponse, error)
 	GetFiles(ctx context.Context) ([]dto.FileResponse, error)
 	GetFileByID(ctx context.Context, req *dto.GetFileRequest) (*dto.FileResponse, error)
+	DeleteFile(ctx context.Context, req *dto.DeleteFileRequest) error
 }
 
 type Database interface {
 	Create(ctx context.Context, file *dto.CreateFile) (*dto.File, error)
 	List(ctx context.Context) ([]dto.File, error)
 	GetFileByID(ctx context.Context, id string) (*dto.File, error)
+	DeleteFile(ctx context.Context, id string) (string, error)
 }
 
 type S3 interface {
 	UploadObject(ctx context.Context, key string, body io.Reader, contentType string) error
 	GetObject(ctx context.Context, key string) (io.ReadCloser, *string, error)
 	PresignGetObject(ctx context.Context, key string, ttl time.Duration) (string, error)
+	DeleteObject(ctx context.Context, key string) error
 }

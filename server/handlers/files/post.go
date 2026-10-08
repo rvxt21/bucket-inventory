@@ -1,4 +1,4 @@
-package handlers
+package files
 
 import (
 	"errors"
@@ -12,6 +12,18 @@ import (
 
 const sniffLen = 512
 
+// UploadFile godoc
+//
+//	@Summary	Upload a file
+//	@Tags		files
+//	@Accept		multipart/form-data
+//	@Produce	json
+//	@Param		file	formData	file	true	"File to upload"
+//	@Success	201		{object}	dto.FileResponse
+//	@Failure	400		{object}	echo.HTTPError
+//	@Failure	413		{object}	echo.HTTPError
+//	@Failure	500		{object}	echo.HTTPError
+//	@Router		/files [post]
 func (h *Handler) UploadFile(c *echo.Context) error {
 	ctx := c.Request().Context()
 
@@ -52,13 +64,13 @@ func (h *Handler) UploadFile(c *echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "validation error")
 	}
 
-	_, err = h.service.UploadFile(ctx, req)
+	resp, err := h.service.UploadFile(ctx, req)
 	if err != nil {
 		h.log.Error("failed to upload file", slog.String("filename", filename), slog.Any("error", err))
 		return err
 	}
 
-	return c.NoContent(http.StatusCreated)
+	return c.JSON(http.StatusCreated, resp)
 }
 
 func detectContentType(src io.ReadSeeker) (string, error) {

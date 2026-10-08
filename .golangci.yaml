@@ -40,6 +40,7 @@ linters:
     - gochecknoglobals
     - unqueryvet
     - exhaustruct_v5
+    - gochecknoinits
   settings:
     gocritic:
       enabled-tags:
@@ -68,6 +69,8 @@ linters:
           disabled: true
   exclusions:
     warn-unused: true
+    paths:
+      - open_api
 
 formatters:
   enable:
