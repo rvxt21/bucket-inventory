@@ -13,6 +13,8 @@ import (
 	filehandlers "github.com/rvxt21/bucket-inventory/server/handlers/files"
 )
 
+const bytesInMB = 1 << 20
+
 type Server struct {
 	server   *http.Server
 	config   *config.Config
@@ -28,7 +30,7 @@ func (s *Server) Start(_ context.Context) error {
 	addr := net.JoinHostPort(s.config.HTTP.Host, s.config.HTTP.Port)
 	s.server = &http.Server{Addr: addr, Handler: router, ReadTimeout: s.config.ReadTimeout}
 
-	router.POST("/files", s.handlers.UploadFile, middleware.BodyLimit(s.config.MaxUploadMB<<20))
+	router.POST("/files", s.handlers.UploadFile, middleware.BodyLimit(s.config.MaxUploadMB*bytesInMB))
 	router.GET("/files", s.handlers.GetFiles)
 	router.GET("/files/:id", s.handlers.GetFileByID)
 	router.DELETE("/files/:id", s.handlers.DeleteFile)
