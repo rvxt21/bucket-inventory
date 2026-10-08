@@ -7,7 +7,7 @@ import (
 	"github.com/rvxt21/bucket-inventory/pkg/dto"
 )
 
-func (s *FileService) UploadFile(ctx context.Context, req dto.UploadFile) (*dto.File, error) {
+func (s *FileService) UploadFile(ctx context.Context, req dto.UploadFile) (*dto.FileResponse, error) {
 	key := uuid.New().String() + "." + req.Filename
 
 	err := s.storage.UploadObject(ctx, key, req.File, req.ContentType)
@@ -25,5 +25,5 @@ func (s *FileService) UploadFile(ctx context.Context, req dto.UploadFile) (*dto.
 		return nil, ErrUploadFile.Wrap(err)
 	}
 
-	return file, nil
+	return new(makeFileResponse(file, "")), nil
 }

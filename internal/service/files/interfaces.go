@@ -9,7 +9,7 @@ import (
 )
 
 type Service interface {
-	UploadFile(ctx context.Context, req dto.UploadFile) (*dto.File, error)
+	UploadFile(ctx context.Context, req dto.UploadFile) (*dto.FileResponse, error)
 	GetFiles(ctx context.Context) ([]dto.FileResponse, error)
 	GetFileByID(ctx context.Context, req *dto.GetFileRequest) (*dto.FileResponse, error)
 	DeleteFile(ctx context.Context, req *dto.DeleteFileRequest) error
@@ -19,7 +19,7 @@ type Database interface {
 	Create(ctx context.Context, file *dto.CreateFile) (*dto.File, error)
 	List(ctx context.Context) ([]dto.File, error)
 	GetFileByID(ctx context.Context, id string) (*dto.File, error)
-	DeleteFile(ctx context.Context, id string) (bool, error)
+	DeleteFile(ctx context.Context, id string) (string, error)
 }
 
 type S3 interface {

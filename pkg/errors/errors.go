@@ -1,14 +1,13 @@
 package errors
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type Error struct {
 	Message string
 	Err     error
-}
-
-func (e *Error) ExpandError(err error) {
-	e.Err = err
 }
 
 func (e *Error) Error() string {
@@ -28,4 +27,13 @@ func (e *Error) Wrap(err error) *Error {
 		Message: e.Message,
 		Err:     err,
 	}
+}
+
+func (e *Error) Is(target error) bool {
+	t, ok := target.(*Error)
+	if !ok {
+		return false
+	}
+
+	return e.Message == t.Message && (t.Err == nil || errors.Is(e.Err, t.Err))
 }

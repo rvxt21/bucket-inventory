@@ -11,6 +11,5 @@ var (
 	ErrCreateFile             = &errors.Error{Message: "error creating file"}
 	ErrGetFileByID            = &errors.Error{Message: "error get file by id"}
 	ErrListFiles              = &errors.Error{Message: "error listing files"}
-	ErrDeleteFile             = &errors.Error{Message: "error deleting file"}
-	ErrCheckAffectedRows      = &errors.Error{Message: "error checking affected rows"}
+	ErrDeleteFile             = &errors.Error{Message: "error deleting file from database"}
 )

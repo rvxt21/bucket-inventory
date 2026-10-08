@@ -31,7 +31,7 @@ func TestUploadFile_Success(t *testing.T) {
 
 	resp, err := svc.UploadFile(ctx, req)
 	require.NoError(t, err)
-	require.Equal(t, created, resp)
+	require.Equal(t, &dto.FileResponse{ID: "123", Name: req.Filename}, resp)
 }
 
 func TestUploadFile_S3Error(t *testing.T) {

@@ -116,22 +116,22 @@ func (_c *FilesDatabase_Create_Call) RunAndReturn(run func(ctx context.Context, 
 }
 
 // DeleteFile provides a mock function for the type FilesDatabase
-func (_mock *FilesDatabase) DeleteFile(ctx context.Context, id string) (bool, error) {
+func (_mock *FilesDatabase) DeleteFile(ctx context.Context, id string) (string, error) {
 	ret := _mock.Called(ctx, id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for DeleteFile")
 	}
 
-	var r0 bool
+	var r0 string
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (bool, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (string, error)); ok {
 		return returnFunc(ctx, id)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) bool); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) string); ok {
 		r0 = returnFunc(ctx, id)
 	} else {
-		r0 = ret.Get(0).(bool)
+		r0 = ret.Get(0).(string)
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
 		r1 = returnFunc(ctx, id)
@@ -171,12 +171,12 @@ func (_c *FilesDatabase_DeleteFile_Call) Run(run func(ctx context.Context, id st
 	return _c
 }
 
-func (_c *FilesDatabase_DeleteFile_Call) Return(b bool, err error) *FilesDatabase_DeleteFile_Call {
-	_c.Call.Return(b, err)
+func (_c *FilesDatabase_DeleteFile_Call) Return(s string, err error) *FilesDatabase_DeleteFile_Call {
+	_c.Call.Return(s, err)
 	return _c
 }
 
-func (_c *FilesDatabase_DeleteFile_Call) RunAndReturn(run func(ctx context.Context, id string) (bool, error)) *FilesDatabase_DeleteFile_Call {
+func (_c *FilesDatabase_DeleteFile_Call) RunAndReturn(run func(ctx context.Context, id string) (string, error)) *FilesDatabase_DeleteFile_Call {
 	_c.Call.Return(run)
 	return _c
 }

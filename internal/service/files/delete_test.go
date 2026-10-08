@@ -14,8 +14,7 @@ func TestDeleteFile_Success(t *testing.T) {
 	svc, m := service(t)
 	req := &dto.DeleteFileRequest{ID: "123"}
 
-	m.db.EXPECT().GetFileByID(ctx, "123").Return(&dto.File{ID: "123", StorageKey: "key"}, nil).Once()
-	m.db.EXPECT().DeleteFile(ctx, "123").Return(true, nil).Once()
+	m.db.EXPECT().DeleteFile(ctx, "123").Return("key", nil).Once()
 	m.s3.EXPECT().DeleteObject(ctx, "key").Return(nil).Once()
 
 	err := svc.DeleteFile(ctx, req)
@@ -28,34 +27,22 @@ func TestDeleteFile_NotFound(t *testing.T) {
 	svc, m := service(t)
 	req := &dto.DeleteFileRequest{ID: "123"}
 
-	m.db.EXPECT().GetFileByID(ctx, "123").Return(nil, database.ErrNotFound).Once()
+	m.db.EXPECT().DeleteFile(ctx, "123").Return("", database.ErrNotFound).Once()
 
 	err := svc.DeleteFile(ctx, req)
 	require.ErrorIs(t, err, ErrFileNotFound)
 }
 
-func TestDeleteFile_GetError(t *testing.T) {
+func TestDeleteFile_DBError(t *testing.T) {
 	ctx := t.Context()
 
 	svc, m := service(t)
 	req := &dto.DeleteFileRequest{ID: "123"}
 
-	m.db.EXPECT().GetFileByID(ctx, "123").Return(nil, errDB).Once()
+	m.db.EXPECT().DeleteFile(ctx, "123").Return("", errDB).Once()
 
 	err := svc.DeleteFile(ctx, req)
-	require.ErrorIs(t, err, errDB)
-}
-
-func TestDeleteFile_DeleteDBError(t *testing.T) {
-	ctx := t.Context()
-
-	svc, m := service(t)
-	req := &dto.DeleteFileRequest{ID: "123"}
-
-	m.db.EXPECT().GetFileByID(ctx, "123").Return(&dto.File{ID: "123", StorageKey: "key"}, nil).Once()
-	m.db.EXPECT().DeleteFile(ctx, "123").Return(false, errDB).Once()
-
-	err := svc.DeleteFile(ctx, req)
+	require.ErrorIs(t, err, ErrDeleteFile)
 	require.ErrorIs(t, err, errDB)
 }
 
@@ -65,8 +52,7 @@ func TestDeleteFile_S3Error(t *testing.T) {
 	svc, m := service(t)
 	req := &dto.DeleteFileRequest{ID: "123"}
 
-	m.db.EXPECT().GetFileByID(ctx, "123").Return(&dto.File{ID: "123", StorageKey: "key"}, nil).Once()
-	m.db.EXPECT().DeleteFile(ctx, "123").Return(true, nil).Once()
+	m.db.EXPECT().DeleteFile(ctx, "123").Return("key", nil).Once()
 	m.s3.EXPECT().DeleteObject(ctx, "key").Return(errS3).Once()
 
 	err := svc.DeleteFile(ctx, req)

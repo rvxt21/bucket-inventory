@@ -20,6 +20,7 @@ type HTTP struct {
 	Host        string        `env:"HTTP_HOST,required" envDefault:"localhost"`
 	Port        string        `env:"HTTP_PORT,required" envDefault:"1111"`
 	ReadTimeout time.Duration `env:"HTTP_READ_TIMEOUT"  envDefault:"10s"`
+	MaxUploadMB int64         `env:"HTTP_MAX_UPLOAD_MB" envDefault:"10"`
 }
 
 type S3 struct {

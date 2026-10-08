@@ -52,13 +52,13 @@ func (h *Handler) UploadFile(c *echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "validation error")
 	}
 
-	_, err = h.service.UploadFile(ctx, req)
+	resp, err := h.service.UploadFile(ctx, req)
 	if err != nil {
 		h.log.Error("failed to upload file", slog.String("filename", filename), slog.Any("error", err))
 		return err
 	}
 
-	return c.NoContent(http.StatusCreated)
+	return c.JSON(http.StatusCreated, resp)
 }
 
 func detectContentType(src io.ReadSeeker) (string, error) {

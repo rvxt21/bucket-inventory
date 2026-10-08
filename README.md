@@ -27,7 +27,7 @@ object directly from the bucket.
 
 | Method   | Path         | Description                                   |
 |----------|--------------|-----------------------------------------------|
-| `POST`   | `/upload`    | Upload a file (form field `file`)             |
+| `POST`   | `/files`     | Upload a file (form field `file`)             |
 | `GET`    | `/files`     | List files with presigned download links      |
 | `GET`    | `/files/:id` | Get a file by ID with a presigned download link |
 | `DELETE` | `/files/:id` | Delete a file                                 |

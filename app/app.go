@@ -39,7 +39,7 @@ type hooks struct {
 }
 
 func invokeHooks(lc fx.Lifecycle, h hooks) {
-	lc.Append(fx.Hook{OnStart: h.Server.Start, OnStop: h.Server.Stop})
-	lc.Append(fx.Hook{OnStart: h.S3.Start, OnStop: h.S3.Stop})
 	lc.Append(fx.Hook{OnStart: h.Postgres.Start, OnStop: h.Postgres.Stop})
+	lc.Append(fx.Hook{OnStart: h.S3.Start, OnStop: h.S3.Stop})
+	lc.Append(fx.Hook{OnStart: h.Server.Start, OnStop: h.Server.Stop})
 }

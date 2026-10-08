@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
 	"github.com/rvxt21/bucket-inventory/config"
 	filehandlers "github.com/rvxt21/bucket-inventory/server/handlers/files"
 )
@@ -22,10 +23,12 @@ type Server struct {
 func (s *Server) Start(_ context.Context) error {
 	router := echo.New()
 
+	router.Use(middleware.Recover())
+
 	addr := net.JoinHostPort(s.config.HTTP.Host, s.config.HTTP.Port)
 	s.server = &http.Server{Addr: addr, Handler: router, ReadTimeout: s.config.ReadTimeout}
 
-	router.POST("/upload", s.handlers.UploadFile)
+	router.POST("/files", s.handlers.UploadFile, middleware.BodyLimit(s.config.MaxUploadMB<<20))
 	router.GET("/files", s.handlers.GetFiles)
 	router.GET("/files/:id", s.handlers.GetFileByID)
 	router.DELETE("/files/:id", s.handlers.DeleteFile)
