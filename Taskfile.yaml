@@ -37,3 +37,9 @@ tasks:
   test:
     desc: Run tests
     cmd: go test -v ./... -race -cover -json | tparse -all
+  
+  docs:
+    desc: Generate OpenAPI docs 
+    cmds: 
+      - swag init -g main.go -o open_api --parseDependencyLevel 1
+

@@ -12,6 +12,18 @@ import (
 
 const sniffLen = 512
 
+// UploadFile godoc
+//
+//	@Summary	Upload a file
+//	@Tags		files
+//	@Accept		multipart/form-data
+//	@Produce	json
+//	@Param		file	formData	file	true	"File to upload"
+//	@Success	201		{object}	dto.FileResponse
+//	@Failure	400		{object}	echo.HTTPError
+//	@Failure	413		{object}	echo.HTTPError
+//	@Failure	500		{object}	echo.HTTPError
+//	@Router		/files [post]
 func (h *Handler) UploadFile(c *echo.Context) error {
 	ctx := c.Request().Context()
 

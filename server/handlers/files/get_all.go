@@ -7,6 +7,14 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
+// GetFiles godoc
+//
+//	@Summary	List files with presigned download links
+//	@Tags		files
+//	@Produce	json
+//	@Success	200	{array}		dto.FileResponse
+//	@Failure	500	{object}	echo.HTTPError
+//	@Router		/files [get]
 func (h *Handler) GetFiles(c *echo.Context) error {
 	ctx := c.Request().Context()
 

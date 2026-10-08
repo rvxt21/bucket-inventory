@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v5"
 	"github.com/labstack/echo/v5/middleware"
 	"github.com/rvxt21/bucket-inventory/config"
+	_ "github.com/rvxt21/bucket-inventory/open_api" // registers the generated spec
 	filehandlers "github.com/rvxt21/bucket-inventory/server/handlers/files"
 )
 

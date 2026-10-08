@@ -11,6 +11,16 @@ import (
 	"github.com/rvxt21/bucket-inventory/server/handlers"
 )
 
+// DeleteFile godoc
+//
+//	@Summary	Delete a file
+//	@Tags		files
+//	@Param		id	path	string	true	"File ID (UUID)"
+//	@Success	204
+//	@Failure	400	{object}	echo.HTTPError
+//	@Failure	404	{object}	echo.HTTPError
+//	@Failure	500	{object}	echo.HTTPError
+//	@Router		/files/{id} [delete]
 func (h *Handler) DeleteFile(c *echo.Context) error {
 	ctx := c.Request().Context()
 

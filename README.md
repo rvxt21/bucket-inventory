@@ -36,17 +36,29 @@ object directly from the bucket.
 
 ```sh
 cp .env.example .env
-docker compose up -d   # PostgreSQL + LocalStack
-task migrate-up        # apply migrations and regenerate go-jet models
+```
+
+### Run everything in Docker
+
+```sh
+docker compose up --build -d   # API + PostgreSQL + LocalStack
+task migrate-up                # apply migrations and regenerate go-jet models
+```
+
+### Run the API locally
+
+```sh
+docker compose up -d database localstack   # PostgreSQL + LocalStack only
+task migrate-up                            # apply migrations and regenerate go-jet models
 go run .
 ```
 
-The server listens on `localhost:1111` by default (`HTTP_HOST` / `HTTP_PORT`).
+Either way, the API listens on `localhost:8080` (`HTTP_HOST` / `HTTP_PORT` in `.env`).
 
 Upload a file:
 
 ```sh
-curl -F "file=@./photo.png" http://localhost:1111/upload
+curl -F "file=@./photo.png" http://localhost:8080/files
 ```
 
 ## Development
