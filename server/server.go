@@ -36,6 +36,9 @@ func (s *Server) Start(_ context.Context) error {
 	router.GET("/files/:id", s.handlers.GetFileByID)
 	router.DELETE("/files/:id", s.handlers.DeleteFile)
 
+	router.GET("/readyz", s.handlers.Ready)
+	router.GET("/healthz", s.handlers.Live)
+
 	go func() {
 		err := s.server.ListenAndServe()
 		if err != nil && !errors.Is(err, http.ErrServerClosed) {

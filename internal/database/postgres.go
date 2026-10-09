@@ -17,6 +17,10 @@ type Postgres struct {
 	db     *sql.DB
 }
 
+func (p *Postgres) Ping(ctx context.Context) error {
+	return p.db.PingContext(ctx)
+}
+
 func (p *Postgres) Start(ctx context.Context) error {
 	dsn := (&url.URL{
 		Scheme:   "postgres",
