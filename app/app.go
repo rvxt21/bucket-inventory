@@ -4,6 +4,7 @@ import (
 	"github.com/rvxt21/bucket-inventory/config"
 	"github.com/rvxt21/bucket-inventory/internal/database"
 	"github.com/rvxt21/bucket-inventory/internal/service/files"
+	"github.com/rvxt21/bucket-inventory/internal/service/health"
 	"github.com/rvxt21/bucket-inventory/internal/storage"
 	"github.com/rvxt21/bucket-inventory/pkg/logger"
 	"github.com/rvxt21/bucket-inventory/server"
@@ -20,9 +21,10 @@ func App(cfg *config.Config) *fx.App {
 		fx.Provide(
 			logger.NewLogger,
 			server.NewServer,
-			fx.Annotate(storage.NewS3, fx.As(new(files.S3)), fx.As(fx.Self())),
-			fx.Annotate(database.NewPostgres, fx.As(new(files.Database)), fx.As(fx.Self())),
+			fx.Annotate(storage.NewS3, fx.As(new(files.S3)), fx.As(new(health.Storage)), fx.As(fx.Self())),
+			fx.Annotate(database.NewPostgres, fx.As(new(files.Database)), fx.As(new(health.Database)), fx.As(fx.Self())),
 			fx.Annotate(files.NewFileService, fx.As(new(files.Service))),
+			fx.Annotate(health.NewHealthService, fx.As(new(health.Service))),
 			filehandlers.NewHandler,
 		),
 

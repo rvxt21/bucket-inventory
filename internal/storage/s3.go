@@ -17,6 +17,11 @@ type S3 struct {
 	bucket  string
 }
 
+func (s *S3) Ping(ctx context.Context) error {
+	_, err := s.client.HeadBucket(ctx, &s3.HeadBucketInput{Bucket: aws.String(s.bucket)})
+	return err
+}
+
 func (s *S3) Start(ctx context.Context) error {
 	cfg, err := cfgAws.LoadDefaultConfig(
 		ctx,
